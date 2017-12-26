@@ -31,11 +31,7 @@ class ViewController: UIViewController {
         calendarView.minimumInteritemSpacing=0
         //setup labels
         calendarView.visibleDates{(visibleDates)in
-            let date = visibleDates.monthDates.first!.date
-            self.formatter.dateFormat = "yyyy"
-            self.year.text = formatter.string(from: date)
-            self.formatter.dateFormat = "MMMM"
-            self.month.text = self.formatter.string(from: date)
+            self.setupViewsOfCalendar(visibleDates:visibleDates)
             
         }
     }
@@ -69,6 +65,14 @@ class ViewController: UIViewController {
             validCell.selectedView.isHidden=true
         }
 }
+    func setupViewsOfCalendar(visibleDates: DateSegmentInfo)
+    {
+        let date = visibleDates.monthDates.first!.date
+        self.formatter.dateFormat = "yyyy"
+        self.year.text = self.formatter.string(from: date)
+        self.formatter.dateFormat = "MMMM"
+        self.month.text = self.formatter.string(from: date)
+    }
 }
 extension ViewController:JTAppleCalendarViewDataSource{
     func calendar(_ calendar: JTAppleCalendarView, willDisplay cell: JTAppleCell, forItemAt date: Date, cellState: CellState, indexPath: IndexPath) {
@@ -107,12 +111,12 @@ extension ViewController:JTAppleCalendarViewDelegate{
         handleCelltextColor(view:cell, cellState:cellState)
     }
     func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentWith visibleDates: DateSegmentInfo) {
-        let date = visibleDates.monthDates.first!.date
-        formatter.dateFormat = "yyyy"
-        year.text = formatter.string(from: date)
-        formatter.dateFormat = "MMMM"
-        month.text = formatter.string(from: date)
-        
+//        let date = visibleDates.monthDates.first!.date
+//        formatter.dateFormat = "yyyy"
+//        year.text = formatter.string(from: date)
+//        formatter.dateFormat = "MMMM"
+//        month.text = formatter.string(from: date)
+        setupViewsOfCalendar(visibleDates:visibleDates)
     }
 }
 extension UIColor {
