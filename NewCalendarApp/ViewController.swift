@@ -14,14 +14,19 @@ class ViewController: UIViewController {
     @IBOutlet weak var month: UILabel!
     
     let outsideMonthColor = UIColor(red: 169/255, green:169/255, blue:169/255, alpha: 1.0) 
-    let monthColor = UIColor.white
-    let selectedMonthColor = UIColor.black
-    let currentDateSelectedViewColor = UIColor.yellow
+    let monthColor = UIColor.black
+    let selectedMonthColor = UIColor.white
+    let currentDateSelectedViewColor = UIColor.black
     
     let formatter = DateFormatter()
+    let todaysDate = Date()
+
     override func viewDidLoad() {
         super.viewDidLoad()
        setupCalendarView()
+        //scrolling to date with animation and
+        calendarView.scrollToDate(Date(), animateScroll:false)
+        calendarView.selectDates([Date()])
     }
 
     func setupCalendarView()
@@ -43,6 +48,15 @@ class ViewController: UIViewController {
         guard let validCell = view as? CustomCell else {
             return
         }
+        //assigning different color for cell when it is current date
+        formatter.dateFormat = "yyyy MM dd"
+        let todaysDateString = formatter.string(from: todaysDate)
+        let monthDateString = formatter.string(from: cellState.date)
+        if todaysDateString == monthDateString{
+            validCell.dateLabel.textColor = UIColor.brown
+            validCell.selectedView.backgroundColor = UIColor.blue
+        }else{
+      
         if cellState.isSelected{
             validCell.dateLabel.textColor = selectedMonthColor
         }else{
@@ -50,20 +64,22 @@ class ViewController: UIViewController {
                 validCell.dateLabel.textColor = monthColor
             }else{
                 validCell.dateLabel.textColor = outsideMonthColor
-
             }
             validCell.selectedView.isHidden=true
         }
+        }
     }
+    
     func handleCellSelected(view:JTAppleCell?, cellState:CellState){
         guard let validCell = view as? CustomCell else {
             return
         }
-        if cellState.isSelected{
-            validCell.selectedView.isHidden=false
-        }else{
-            validCell.selectedView.isHidden=true
-        }
+        validCell.selectedView.isHidden = cellState.isSelected ? false : true
+//        if cellState.isSelected{
+//            validCell.selectedView.isHidden=false
+//        }else{
+//            validCell.selectedView.isHidden=true
+//        }
 }
     func setupViewsOfCalendar(visibleDates: DateSegmentInfo)
     {
@@ -84,7 +100,7 @@ extension ViewController:JTAppleCalendarViewDataSource{
         formatter.dateFormat = "yyyy MM dd"
         formatter.timeZone = Calendar.current.timeZone
         formatter.locale = Calendar.current.locale
-        let startDate = formatter.date(from: "2018 01 01")!
+        let startDate = formatter.date(from: "2017 12 01")!
         let endDate = formatter.date(from: "2018 12 31" )!
         let parameters=ConfigurationParameters(startDate: startDate, endDate: endDate)
         return parameters
